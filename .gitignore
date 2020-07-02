@@ -1,0 +1,19 @@
+build/
+.settings/
+.gradle/
+logs/
+incoming/
+
+# IntelliJ
+.idea/
+*.idea/*
+*.iml
+*.ipr
+*.iws
+out/
+
+
+.DS_Store
+project.properties
+classes/
+target/
