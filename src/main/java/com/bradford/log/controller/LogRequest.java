@@ -6,25 +6,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class LogRequest {
 
   private String message;
-  private String error;
+  private long timestamp;
   private int logLevel;
 
   public LogRequest() {
 
   }
 
-  public LogRequest(int logLevel, String message, String error) {
+  public LogRequest(int logLevel, String message, long timestamp) {
     this.logLevel = logLevel;
     this.message = message;
-    this.error = error;
+    this.timestamp = timestamp;
   }
 
   public String getMessage() {
     return message;
   }
 
-  public String getError() {
-    return error;
+  public long getTimestamp() {
+    return timestamp;
   }
 
   public int getLogLevel() {
