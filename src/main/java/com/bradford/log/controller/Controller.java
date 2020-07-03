@@ -1,7 +1,7 @@
 package com.bradford.log.controller;
 
-import com.bradford.log.handler.LogToFileTask;
-import com.bradford.log.handler.LogTaskHandler;
+import com.bradford.log.handler.WriteToLogFileTask;
+import com.bradford.log.handler.TaskHandler;
 import com.google.gson.Gson;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class Controller {
 
-  private LogTaskHandler handler;
+  private TaskHandler handler;
 
   @Autowired
-  public void setLogTaskHandler(LogTaskHandler handler) {
+  public void setLogTaskHandler(TaskHandler handler) {
     this.handler = handler;
   }
 
@@ -36,18 +36,18 @@ public class Controller {
   }
 
   @RequestMapping(value = "/v1/log", method = RequestMethod.POST)
-  public ResponseEntity<Response> log(@RequestBody LogRequest request) {
-    handler.submit(new LogToFileTask(request));
+  public ResponseEntity<Response> log(@RequestBody Request request) {
+    handler.submit(new WriteToLogFileTask(request));
     return Response.success("ok");
   }
 
   @RequestMapping(value = "/v1/batch", method = RequestMethod.POST)
   public ResponseEntity<Response> batch(@RequestBody String requests) {
     Gson gson = new Gson();
-    BatchLogRequest requestList = gson.fromJson(requests, BatchLogRequest.class);
-    List<LogRequest> list = requestList.getRequests();
+    BatchRequest requestList = gson.fromJson(requests, BatchRequest.class);
+    List<Request> list = requestList.getRequests();
 
-    handler.submit(new LogToFileTask(list));
+    handler.submit(new WriteToLogFileTask(list));
     return Response.success("ok");
   }
 }

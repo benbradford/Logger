@@ -6,19 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BatchLogRequest {
+public class BatchRequest {
 
-  private List<LogRequest> requests;
+  private List<Request> requests;
 
-  public BatchLogRequest() {
+  public BatchRequest() {
     requests = new ArrayList<>();
   }
 
-  public BatchLogRequest(List<LogRequest> requests) {
+  public BatchRequest(List<Request> requests) {
     this.requests = requests;
   }
 
-  public List<LogRequest> getRequests() {
+  public List<Request> getRequests() {
     return requests;
   }
 

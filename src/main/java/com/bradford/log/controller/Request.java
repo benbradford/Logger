@@ -3,17 +3,17 @@ package com.bradford.log.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class LogRequest {
+public class Request {
 
   private String message;
   private long timestamp;
   private int logLevel;
 
-  public LogRequest() {
+  public Request() {
 
   }
 
-  public LogRequest(int logLevel, String message, long timestamp) {
+  public Request(int logLevel, String message, long timestamp) {
     this.logLevel = logLevel;
     this.message = message;
     this.timestamp = timestamp;

@@ -7,20 +7,20 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class LogTaskHandler {
+public class TaskHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(LogTaskHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TaskHandler.class);
 
-  private ConcurrentLinkedDeque<LogTask> tasks = new ConcurrentLinkedDeque<>();
+  private ConcurrentLinkedDeque<Task> tasks = new ConcurrentLinkedDeque<>();
   private Thread taskPoller;
   private AtomicBoolean hasRequestedQuit = new AtomicBoolean(false);
 
-  public LogTaskHandler() {
+  public TaskHandler() {
     taskPoller = new Thread(()->update());
     taskPoller.start();
   }
 
-  public void submit(LogTask task) {
+  public void submit(Task task) {
     if (taskPoller == null) {
       LOG.error("Task poller has been shut down, will not exec task");
       return;
@@ -47,7 +47,7 @@ public class LogTaskHandler {
 
   private void update() {
     while (!hasRequestedQuit.get()) {
-      LogTask task = tasks.poll();
+      Task task = tasks.poll();
       if (task != null) {
         task.execute();
       } else {

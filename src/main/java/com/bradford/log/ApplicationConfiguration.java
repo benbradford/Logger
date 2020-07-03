@@ -1,6 +1,6 @@
 package com.bradford.log;
 
-import com.bradford.log.handler.LogTaskHandler;
+import com.bradford.log.handler.TaskHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +12,8 @@ public class ApplicationConfiguration {
 
   @Bean(destroyMethod = "destroy")
   @Primary
-  public LogTaskHandler requestLogTaskHandler() {
-    return new LogTaskHandler();
+  public TaskHandler requestLogTaskHandler() {
+    return new TaskHandler();
   }
 
 }
