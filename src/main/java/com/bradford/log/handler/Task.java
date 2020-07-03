@@ -1,5 +1,5 @@
 package com.bradford.log.handler;
 
-public interface Task extends AutoCloseable {
+public interface Task {
   void execute();
 }

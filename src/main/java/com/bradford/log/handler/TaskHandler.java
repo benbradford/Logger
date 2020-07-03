@@ -3,7 +3,7 @@ package com.bradford.log.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -11,7 +11,7 @@ public class TaskHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(TaskHandler.class);
 
-  private ConcurrentLinkedDeque<Task> tasks = new ConcurrentLinkedDeque<>();
+  private final ConcurrentLinkedQueue<Task> tasks = new ConcurrentLinkedQueue<>();
   private Thread taskPoller;
   private AtomicBoolean hasRequestedQuit = new AtomicBoolean(false);
 
@@ -38,10 +38,10 @@ public class TaskHandler {
 
     try {
       taskPoller.join(3000);
+      LOG.info("Complete!");
     } catch (InterruptedException e) {
       LOG.warn("Cannot join with main thread: " + e);
     }
-    LOG.info("Complete!");
     taskPoller = null;
   }
 

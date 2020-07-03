@@ -3,8 +3,6 @@ package com.bradford.log.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static java.lang.Double.valueOf;
-
 public class Response {
 
   public static class Error {

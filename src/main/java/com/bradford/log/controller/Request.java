@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Request {
 
   private String message;
-  private long timestamp;
+  private long timestamp; // in milliseconds
   private int logLevel;
 
   public Request() {
