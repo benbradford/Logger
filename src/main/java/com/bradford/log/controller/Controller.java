@@ -7,10 +7,7 @@ import com.google.gson.Gson;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,11 +39,25 @@ public class Controller {
 
   @RequestMapping(value = "/v1/batch", method = RequestMethod.POST)
   public ResponseEntity<Response> batch(@RequestBody String requests) {
-    Gson gson = new Gson();
-    BatchRequest requestList = gson.fromJson(requests, BatchRequest.class);
-    List<Request> list = requestList.getRequests();
-
-    handler.submit(new WriteToLogFileTask(factory, list));
+    handler.submit(new WriteToLogFileTask(factory, createListOfRequestsFromJSON(requests)));
     return Response.success("ok");
+  }
+
+  @RequestMapping(value = "/v1/log/{filename}", method = RequestMethod.POST)
+  public ResponseEntity<Response> logToFile(@PathVariable String filename, @RequestBody Request request) {
+    handler.submit(new WriteToLogFileTask(factory, filename, request));
+    return Response.success("ok");
+  }
+
+  @RequestMapping(value = "/v1/batch/{filename}", method = RequestMethod.POST)
+  public ResponseEntity<Response> batchToFile(@PathVariable String filename, @RequestBody String requests) {
+    handler.submit(new WriteToLogFileTask(factory, filename, createListOfRequestsFromJSON(requests)));
+    return Response.success("ok");
+  }
+
+  private List<Request> createListOfRequestsFromJSON(String jsonRequest) {
+    Gson gson = new Gson();
+    BatchRequest requestList = gson.fromJson(jsonRequest, BatchRequest.class);
+    return requestList.getRequests();
   }
 }

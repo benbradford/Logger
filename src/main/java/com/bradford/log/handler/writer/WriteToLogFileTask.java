@@ -12,24 +12,34 @@ import java.util.List;
 public class WriteToLogFileTask implements Task {
 
   private static final Logger LOG = LoggerFactory.getLogger(WriteToLogFileTask.class);
-
+  private static final String DEFAULT_FILENAME = "logFile";
+  private final String filename;
   private final List<Request> requests;
   private final PrettyTimestampCreator prettyTimestampCreator;
   private final LogFileCreator logFileCreator;
 
   public WriteToLogFileTask(ComponentsFactory componentsFactory, Request request) {
-    this(componentsFactory, Arrays.asList(request));
+    this(componentsFactory, DEFAULT_FILENAME, Arrays.asList(request));
+  }
+
+  public WriteToLogFileTask(ComponentsFactory componentsFactory, String filename, Request request) {
+    this(componentsFactory, filename, Arrays.asList(request));
   }
 
   public WriteToLogFileTask(ComponentsFactory componentsFactory, List<Request> requests) {
+    this(componentsFactory, DEFAULT_FILENAME, requests);
+  }
+
+  public WriteToLogFileTask(ComponentsFactory componentsFactory, String filename, List<Request> requests) {
     this.prettyTimestampCreator = componentsFactory.getPrettyTimestampCreator();
     this.logFileCreator = componentsFactory.getLogFileCreator();
     this.requests = requests;
+    this.filename = String.format("%s.log", filename);
   }
 
   @Override
   public void execute() {
-    logFileCreator.createWriter().ifPresent(this::writeLogs);
+    logFileCreator.createWriter(filename).ifPresent(this::writeLogs);
   }
 
   private void writeLogs(Writer writer) {

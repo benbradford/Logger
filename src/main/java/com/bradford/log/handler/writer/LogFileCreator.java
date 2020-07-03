@@ -12,15 +12,14 @@ public class LogFileCreator {
 
   private static final Logger LOG = LoggerFactory.getLogger(WriteToLogFileTask.class);
   private static final String LOG_LOCATION = "/tmp/logs";
-  private static final String FILE_NAME = "logfile.txt";
   private static final DateTimeFormatter FILE_PATH_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
-  public Optional<Writer> createWriter() {
+  public Optional<Writer> createWriter(String filename) {
     try {
       String filePath = getFilePath();
-      String fileName = String.format("%s/%s", filePath, FILE_NAME);
-      createFileIfRequired(filePath, fileName);
-      return Optional.of(new BufferedWriter(new FileWriter(fileName, true)));
+      String completeFileName = String.format("%s/%s", filePath, filename);
+      createFileIfRequired(filePath, completeFileName);
+      return Optional.of(new BufferedWriter(new FileWriter(completeFileName, true)));
     } catch (IOException e) {
       LOG.error("cannot create log file due to IO exception: " + e);
     } catch (Exception e) {
