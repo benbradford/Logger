@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -12,16 +14,15 @@ public class TaskHandler {
   private static final Logger LOG = LoggerFactory.getLogger(TaskHandler.class);
 
   private final ConcurrentLinkedQueue<Task> tasks = new ConcurrentLinkedQueue<>();
-  private Thread taskPoller;
+  private ExecutorService executorService = Executors.newSingleThreadExecutor();
   private AtomicBoolean hasRequestedQuit = new AtomicBoolean(false);
 
   public TaskHandler() {
-    taskPoller = new Thread(()->update());
-    taskPoller.start();
+    executorService.execute(this::update);
   }
 
   public void submit(Task task) {
-    if (taskPoller == null) {
+    if (isNotAcceptingNewTasks()) {
       LOG.error("Task poller has been shut down, will not exec task");
       return;
     }
@@ -29,7 +30,7 @@ public class TaskHandler {
   }
 
   public void destroy() {
-    if (taskPoller == null) {
+    if (isNotAcceptingNewTasks() ) {
       LOG.warn("Cannot destroy, already destroyed");
       return;
     }
@@ -37,12 +38,20 @@ public class TaskHandler {
     hasRequestedQuit.set(true);
 
     try {
-      taskPoller.join(3000);
+      executorService.shutdown();
       LOG.info("Complete!");
-    } catch (InterruptedException e) {
-      LOG.warn("Cannot join with main thread: " + e);
+    } catch (Exception e) {
+      LOG.warn("Cannot shut down executor service with: " + e);
+      try {
+        executorService.shutdownNow();
+      } catch (Exception e2) {
+        LOG.error("Could not shut down now with: " + e2);
+      }
     }
-    taskPoller = null;
+  }
+
+  private boolean isNotAcceptingNewTasks() {
+    return executorService.isShutdown() || executorService.isTerminated();
   }
 
   private void update() {

@@ -1,3 +1,4 @@
+./gradlew bootRun
 
 Accepts http requests to log messages to file. Log files are stored in
   
